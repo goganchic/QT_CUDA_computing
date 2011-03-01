@@ -24,9 +24,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_startCPUButton_clicked()
 {
+    unsigned int dataSize = ui->dataSizeEdit->text().toInt();
+    unsigned int threadsCount = ui->threadsCountEdit->text().toInt();
+    unsigned int dataPerThread = dataSize / threadsCount;
+
+    ui->dataPerThread->setText(QString::number(dataPerThread));
     xs.clear();
     ys.clear();
-    processor = new Processor(ui->blockSizeLcd->value(), ui->blocksCountLcd->value());
+    processor = new Processor(dataPerThread, threadsCount);
     connect(processor, SIGNAL(dataProcessed()), this, SLOT(updateStats()));
     connect(this, SIGNAL(startBlockProcessing()), processor, SLOT(blockProcessed()));
     processor->start();
@@ -35,21 +40,28 @@ void MainWindow::on_startCPUButton_clicked()
 void MainWindow::updateStats()
 {
     QTime curTime = QTime::currentTime();
-    xs.push_back(xs.size());
+    double diff = curTime.msec() - prevTime.msec();
 
-    if (xs.size() < 2)
+    if (diff > 0)
     {
-        ys.push_back(0);
-    }
-    else
-    {
-        ys.push_back(curTime.msec() - prevTime.msec());
+        xs.push_back(xs.size());
+
+        if (xs.size() < 2)
+        {
+            ys.push_back(0);
+        }
+        else
+        {
+            ys.push_back(curTime.msec() - prevTime.msec());
+        }
+
+
+        timeCurve.setData(&xs[0], &ys[0], xs.size());
+
+        ui->plot->replot();
     }
 
     prevTime = curTime;
-    timeCurve.setData(&xs[0], &ys[0], xs.size());
-
-    ui->plot->replot();
 }
 
 void MainWindow::on_stopButton_clicked()
