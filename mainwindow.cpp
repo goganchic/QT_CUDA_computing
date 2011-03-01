@@ -31,7 +31,7 @@ void MainWindow::on_startCPUButton_clicked()
     ui->dataPerThread->setText(QString::number(dataPerThread));
     xs.clear();
     ys.clear();
-    processor = new Processor(dataPerThread, threadsCount);
+    processor = new CPUProcessor(dataPerThread, threadsCount);
     connect(processor, SIGNAL(dataProcessed()), this, SLOT(updateStats()));
     connect(this, SIGNAL(startBlockProcessing()), processor, SLOT(blockProcessed()));
     processor->start();

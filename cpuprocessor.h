@@ -5,12 +5,12 @@
 #include <QMutex>
 #include "subprocessor.h"
 
-class Processor : public QThread
+class CPUProcessor : public QThread
 {
     Q_OBJECT
 public:
-    explicit Processor(unsigned int bs, unsigned int bc, QObject *parent = 0);
-    ~Processor();
+    explicit CPUProcessor(unsigned int bs, unsigned int bc, QObject *parent = 0);
+    ~CPUProcessor();
 
 signals:
     void dataProcessed();

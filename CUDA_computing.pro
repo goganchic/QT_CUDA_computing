@@ -12,11 +12,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    processor.cpp \
+    cpuprocessor.cpp \
     subprocessor.cpp
 
 HEADERS  += mainwindow.h \
-    processor.h \
+    cpuprocessor.h \
     subprocessor.h
 
 FORMS    += mainwindow.ui

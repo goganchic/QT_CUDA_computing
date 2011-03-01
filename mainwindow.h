@@ -6,7 +6,7 @@
 #include <QTime>
 #include <qwt_legend.h>
 #include <qwt_plot_curve.h>
-#include "processor.h"
+#include "cpuprocessor.h"
 
 namespace Ui {
     class MainWindow;
@@ -22,7 +22,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    Processor *processor;
+    CPUProcessor *processor;
     QwtPlotCurve timeCurve;
     QVector<double> xs;
     QVector<double> ys;

@@ -1,6 +1,6 @@
-#include "processor.h"
+#include "cpuprocessor.h"
 
-Processor::Processor(unsigned int bs, unsigned int bc, QObject *parent) :
+CPUProcessor::CPUProcessor(unsigned int bs, unsigned int bc, QObject *parent) :
     QThread(parent), blockSize(bs), blocksCount(bc), blocksCountToProcess(0)
 {
     this->moveToThread(this);
@@ -17,7 +17,7 @@ Processor::Processor(unsigned int bs, unsigned int bc, QObject *parent) :
     results = new float[blocksCount];
 }
 
-Processor::~Processor()
+CPUProcessor::~CPUProcessor()
 {
     for (unsigned int i = 0; i < blocksCount; i++)
     {
@@ -30,13 +30,13 @@ Processor::~Processor()
     delete[] results;
 }
 
-void Processor::run()
+void CPUProcessor::run()
 {
     blockProcessed();
     exec();
 }
 
-void Processor::blockProcessed()
+void CPUProcessor::blockProcessed()
 {
     if (blocksCountToProcess > 0)
         blocksCountToProcess--;
