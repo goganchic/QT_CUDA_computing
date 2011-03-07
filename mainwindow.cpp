@@ -5,6 +5,8 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
+    cpuProcessor(NULL),
+    gpuProcessor(NULL),
     timeCurve("Processing time"),
     prevTime(QTime::currentTime())
 {
@@ -31,10 +33,9 @@ void MainWindow::on_startCPUButton_clicked()
     ui->dataPerThread->setText(QString::number(dataPerThread));
     xs.clear();
     ys.clear();
-    processor = new CPUProcessor(dataPerThread, threadsCount);
-    connect(processor, SIGNAL(dataProcessed()), this, SLOT(updateStats()));
-    connect(this, SIGNAL(startBlockProcessing()), processor, SLOT(blockProcessed()));
-    processor->start();
+    cpuProcessor = new CPUProcessor(dataPerThread, threadsCount);
+    connect(cpuProcessor, SIGNAL(dataProcessed()), this, SLOT(updateStats()));
+    cpuProcessor->start();
 }
 
 void MainWindow::updateStats()
@@ -66,10 +67,33 @@ void MainWindow::updateStats()
 
 void MainWindow::on_stopButton_clicked()
 {
-    if (processor)
+    if (cpuProcessor)
     {
-        processor->quit();
-        processor->wait();
-        delete processor;
+        cpuProcessor->quit();
+        cpuProcessor->wait();
+        delete cpuProcessor;
+        cpuProcessor = NULL;
     }
+
+    if (gpuProcessor)
+    {
+        gpuProcessor->quit();
+        gpuProcessor->wait();
+        delete gpuProcessor;
+        gpuProcessor = NULL;
+    }
+}
+
+void MainWindow::on_startGPUButton_clicked()
+{
+    unsigned int dataSize = ui->dataSizeEdit->text().toInt();
+    unsigned int threadsCount = ui->threadsCountEdit->text().toInt();
+    unsigned int dataPerThread = dataSize / threadsCount;
+
+    ui->dataPerThread->setText(QString::number(dataPerThread));
+    xs.clear();
+    ys.clear();
+    gpuProcessor = new GPUProcessor(dataPerThread, threadsCount);
+    connect(gpuProcessor, SIGNAL(dataProcessed()), this, SLOT(updateStats()));
+    gpuProcessor->start();
 }

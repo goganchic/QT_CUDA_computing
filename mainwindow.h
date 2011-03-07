@@ -7,6 +7,7 @@
 #include <qwt_legend.h>
 #include <qwt_plot_curve.h>
 #include "cpuprocessor.h"
+#include "gpuprocessor.h"
 
 namespace Ui {
     class MainWindow;
@@ -22,19 +23,18 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    CPUProcessor *processor;
+    CPUProcessor *cpuProcessor;
+    GPUProcessor *gpuProcessor;
     QwtPlotCurve timeCurve;
     QVector<double> xs;
     QVector<double> ys;
     QTime prevTime;
 
 private slots:
+    void on_startGPUButton_clicked();
     void on_stopButton_clicked();
     void on_startCPUButton_clicked();
     void updateStats();
-
-signals:
-    void startBlockProcessing();
 };
 
 #endif // MAINWINDOW_H
